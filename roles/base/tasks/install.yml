@@ -1,0 +1,18 @@
+---
+# tasks file for base
+
+- name: copy yum .repo file
+  template:
+    src: open_three-tier-app.repo.j2
+    dest: "{{ base_repo_dir }}/open_three-tier-app.repo"
+
+- name: install pre-requisite packages
+  yum:
+    name: "{{ base_packages }}"
+    state: latest
+
+- name: start firewalld
+  systemd:
+    name: firewalld
+    state: started
+    enabled: true

@@ -1,33 +1,27 @@
+---
+
 - hosts: workstation
   gather_facts: true
   roles:
-  - name: osp-facts
+  - { role: osp-facts }
 
-# Setup front-end load balancer tier
-
-
-- name: setup load-balancer tier
-  hosts: frontends
-  become: yes
-  roles:
-    - {name: base-config, tags: base-config}
-    - {name: lb-tier, tags: [lbs, haproxy]}
-
-# Setup application servers tier
-
-- name: setup app tier
-  hosts: apps
-  become: yes
-  gather_facts: false
-  roles:
-    - {name: base-config, tags: base-config}
-    - {name: app-tier, tags: [apps, tomcat]}
-
-# Setup database tier
-
-- name: setup database tier
-  become: yes
+- name: setup database server
   hosts: appdbs
+  gather_facts: false
+  become: true
   roles:
-    - {name: base-config, tags: base-config}
-    - {name: db-tier, tags: [dbs, postgres]}
+  - { role: postgresql }
+
+- name: setup applicaton server
+  hosts: apps
+  gather_facts: false
+  become: true
+  roles:
+  - { role: tomcat }
+
+- name: setup load-balancer
+  hosts: frontends
+  gather_facts: false
+  become: true
+  roles:
+  - { role: haproxy }
