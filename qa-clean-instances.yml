@@ -1,0 +1,7 @@
+---
+
+- hosts: workstation
+  become: true
+  gather_facts: false
+  roles:
+    - { role: osp-instance-delete }
