@@ -1,19 +1,20 @@
 ---
 
-- name: create create job template for OpenStack instances
+- name: create job template for provisioning QA environment
   tower_job_template:
-    name: "{{ tower_job_template_osp_instances }}"
+    name: "{{ tower_job_template_provision_qa }}"
     job_type: run
     inventory: "{{ tower_static_inventory_name }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_osp_instances }}"
+    playbook: "{{ tower_playbook_provision_qa }}"
     credential: "{{ tower_ssh_cred_name }}"
+    tower_verify_ssl: false
 
 # TBC: check if it can be replaced with related module.
-- name: associate IG to OSP instances job template
+- name: associate instance group to job template for provisioning QA environment
   shell: |
     tower-cli job_template associate_ig \
-    --job_template "{{ tower_job_template_osp_instances }}"
+    --job_template "{{ tower_job_template_provision_qa }}"
     --instance_group "{{ tower_instance_group_name }}"
 
 - name: create vault credential
@@ -22,54 +23,58 @@
     organization: "{{ tower_organization }}"
     inputs: "{'vault_password': 'ansible'}"
     type: vault
+    tower_verify_ssl: false
 
-- name: create job template for 3tier app deploy on QA Env
+- name: create job template for 3-tier application on QA environment
   tower_job_template:
     name: "{{ tower_job_template_3tier_app }}"
     job_type: run
     inventory: "{{ tower_static_inventory_name }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_app_deploy }}"
+    playbook: "{{ tower_playbook_3tier_app }}"
     credential: "{{ tower_ssh_cred_name }}"
     vault_credential: yum-repo-cred
+    tower_verify_ssl: false
 
 # TBC: check if it can be replaced with related module.
-- name: associate IG to 3tier job template
+- name: associate instance group to 3-tier application job template for QA environment
   shell: |
     tower-cli job_template associate_ig \
     --job_template "{{ tower_job_template_3tier_app }}" \
     --instance_group "{{ tower_instance_group_name }}"
 
-- name: Job template to delete OSP Instances
+- name: create job template for deleting QA environment
   tower_job_template:
-    name: "{{ tower_job_template_osp_instances_delete }}"
+    name: "{{ tower_job_template_delete_qa }}"
     job_type: run
     inventory: "{{ tower_static_inventory_name }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_osp_instances_delete }}"
+    playbook: "{{ tower_playbook_qa_delete }}"
     credential: "{{ tower_ssh_cred_name }}"
+    tower_verify_ssl: false
 
 # TBC: check if it can be replaced with related module.
-- name: associate IG to OSP Delete instances job template
+- name: associate instance group to OSP Delete instances job template
   shell: |
     tower-cli job_template associate_ig \
-    --job_template "{{ tower_job_template_osp_instances_delete }}" \
+    --job_template "{{ tower_playbook_delete_qa }}" \
     --instance_group "{{ tower_instance_group_name }}"
 
 - name: create job template for smoke test osp instances
   tower_job_template:
-    name: "{{ tower_job_template_smoke_osp }}"
+    name: "{{ tower_job_template_smoke_qa }}"
     job_type: run
     inventory: "{{ tower_static_inventory_name }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_smoke_osp }}"
+    playbook: "{{ tower_playbook_smoke_qa }}"
     credential: "{{ tower_ssh_cred_name }}"
+    tower_verify_ssl: false
 
 # TBC: check if it can be replaced with related module.
-- name: associate IG to Smoke test job template
+- name: associate instance group to Smoke test job template
   shell: |
     tower-cli job_template associate_ig \
-    --job_template "{{ tower_job_template_smoke_osp }}" \
+    --job_template "{{ tower_job_template_smoke_qa }}" \
     --instance_group "{{ tower_instance_group_name }}"
 
 - name: generate var file for order_svc.sh script
@@ -77,56 +82,61 @@
     src: aws_jq_vars.yml.j2
     dest: "{{ tower_tmp_dir }}/aws_jq_vars.yml"
 
-- name: create job template for provisioning AWS environment
+- name: create job template for provisioning production environment
   tower_job_template:
-    name: "{{ tower_job_template_aws_provision }}"
+    name: "{{ tower_job_template_provision_prod }}"
     job_type: run
     inventory: "{{ tower_static_inventory_name }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_aws_provision }}"
+    playbook: "{{ tower_playbook_provision_prod }}"
     credential: "{{ tower_ssh_cred_name }}"
     extra_vars_path: "{{ tower_tmp_dir }}/aws_jq_vars.yml"
+    tower_verify_ssl: false
 
 - name: generate var file for tower module
   template:
     src: tower_info.yml.j2
     dest: "{{ tower_tmp_dir }}/tower_info.yml"
 
-- name: create job template for injecting AWS SSH keys
+- name: create job template for configuring ssh keys for production environment
   tower_job_template:
-    name: "{{ tower_job_template_aws_ssh_keys }}"
-    job_type: run
-    inventory: "{{ tower_ec2_dynamic_inventory}}"
-    project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_aws_ssh }}"
-    credential: "{{ tower_opentlc_cred_name }}"
-    extra_vars_path: /tmp/tower_info.yml
-
-- name: create job template for checking AWS instances status
-  tower_job_template:
-    name: "{{ job_template_aws_status_check }}"
+    name: "{{ tower_job_template_ssh_prod }}"
     job_type: run
     inventory: "{{ tower_ec2_dynamic_inventory }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_aws_status }}"
+    playbook: "{{ tower_playbook_ssh_prod }}"
     credential: "{{ tower_opentlc_cred_name }}"
+    extra_vars_path: /tmp/tower_info.yml
+    tower_verify_ssl: false
 
-- name: create job template for 3tier AWS deploy
+- name: create job template for checking instances status for production environment
   tower_job_template:
-    name: "{{ tower_job_template_3tier_app_aws }}"
+    name: "{{ tower_job_template_status_prod }}"
+    job_type: run
+    inventory: "{{ tower_ec2_dynamic_inventory }}"
+    project: "{{ tower_project_name }}"
+    playbook: "{{ tower_playbook_status_prod }}"
+    credential: "{{ tower_opentlc_cred_name }}"
+    tower_verify_ssl: false
+
+- name: create job template for 3tier application for production environment
+  tower_job_template:
+    name: "{{ tower_job_template_3tier_app_prod }}"
     job_type: run
     inventory: "{{ tower_ec2_dynamic_inventory }}"
     project: "{{ tower_project_name }}"
     playbook: "{{ tower_playbook_app_deploy }}"
-    credential: "{{ tower_ssh_cred_name }}"
+    credential: "{{ tower_playbook_3tier_app_prod }}"
     vault_credential: yum-repo-cred
+    tower_verify_ssl: false
 
-- name: create job template for smoke test aws instances
+- name: create job template for smoke test on production environment
   tower_job_template:
-    name: "{{ tower_job_template_smoke_aws }}"
+    name: "{{ tower_job_template_smoke_prod }}"
     job_type: run
     inventory: "{{ tower_ec2_dynamic_inventory }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_aws_smoke_app }}"
+    playbook: "{{ tower_playbook_smoke_prod }}"
     credential: "{{ tower_ssh_cred_name }}"
     vault_credential: yum-repo-cred
+    tower_verify_ssl: false

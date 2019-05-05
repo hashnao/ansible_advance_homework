@@ -4,6 +4,7 @@
   tower_workflow_template:
     name: "{{ tower_workflow_template }}"
     organization: "{{ tower_organization }}"
+    tower_verify_ssl: false
 
 - name: create workflow schema
   template:
@@ -14,3 +15,4 @@
   tower_workflow_template:
     name: "{{ tower_workflow_template }}"
     schema: "{{ lookup(file, {{ tower_tmp_dir }}/workflow.yml ) }}"
+    tower_verify_ssl: false

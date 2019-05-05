@@ -7,22 +7,22 @@ tower_ec2_inventory_source: "Three tier inventory source"
 scm_inventory_source: "SCM three tier inventory source"
 tower_tmp_dir: /tmp
 
-tower_job_template_name_osp_instances: "QA environment - provisioning"
-tower_playbook_osp_instances: qe-setup-instances.yml
-tower_job_template_osp_instances_delete: "QA environment - nuke"
-tower_playbook_osp_instances_delete: qe-clean-instances.yml
-tower_job_template_smoke_osp: "QA environment - smoke test"
-tower_playbook_smoke_osp: qe-smoke-test.yml
-tower_job_template_aws_provision: "Production environment - provisioning"
-tower_playbook_aws_provision: prod-setup-instances.yml
-tower_job_template_aws_ssh_keys: "Production environment - configuring ssh keys"
-tower_playbook_aws_ssh: prod-setup-credentials.yml
+tower_job_template_provision_qa: "QA environment - provisioning"
+tower_playbook_provision_qa: qa-setup-instances.yml
+tower_job_template_delete_qa: "QA environment - nuke"
+tower_playbook_qa_delete: qa-clean-instances.yml
+tower_job_template_smoke_qa: "QA environment - smoke test"
+tower_playbook_smoke_qa: qa-smoke-test.yml
+tower_job_template_provision_prod: "Production environment - provisioning"
+tower_playbook_provision_prod: prod-setup-instances.yml
+tower_job_template_ssh_prod: "Production environment - configuring ssh keys"
+tower_playbook_ssh_prod: prod-setup-credentials.yml
 tower_job_template_3tier_app: "QA environment - 3-tier application deployment"
 tower_playbook_3tier_app: setup-3tier-app.yml
-tower_job_template_smoke_aws: "Production environment - smoke test"
-tower_playbook_smoke_aws: prod-smoke-test.yml
-tower_job_template_aws_status_check: "Production environment - ec2 instances status check"
-tower_playbook_aws_status: prod-check-ssh.yml
+tower_job_template_smoke_prod: "Production environment - smoke test"
+tower_playbook_smoke_prod: prod-smoke-test.yml
+tower_job_template_status_prod: "Production environment - ec2 instances status check"
+tower_playbook_status_prod: prod-check-ssh.yml
 tower_job_template_3tier_app_aws: "Production environment - 3-tier application deployment"
 tower_playbook_3tier_app_aws: "{{ tower_playbook_3tier_app }}"
 
@@ -49,16 +49,12 @@ tower_opentlc_cred_name: "Opentlc key"
 vault_name: yum_repo_vault
 tower_group_name: workstation
 tower_host_name: workstation-{{ OSP_GUID }}.rhpds.opentlc.com
-tower_ec2_dynamic_inventory_group_first:
+tower_ec2_dynamic_inventory_group:
   - apps
   - appdbs
   - frontends
   - bastions
-tower_ec2_dynamic_inventory_group_second:
-  - tag_AnsibleGroup_bastions
-  - tag_AnsibleGroup_frontends
-  - tag_AnsibleGroup_apps
-  - tag_AnsibleGroup_appdbs
+tower_ec2_dynamic_tag: tag_AnsibleGroup
 tower_instance_group_name: osp
 tower_workflow_template: cicd
 # TBC: Check if it's used.

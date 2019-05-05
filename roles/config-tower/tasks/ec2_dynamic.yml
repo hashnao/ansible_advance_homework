@@ -4,20 +4,27 @@
   tower_inventory:
     name: "{{ tower_ec2_dynamic_inventory }}"
     organization: "{{ tower_organization }}"
+    tower_verify_ssl: false
 
 - name: create groups to deploy applications
   tower_group:
     name: "{{ item }}"
     inventory: "{{ tower_ec2_dynamic_inventory }}"
-  loop:
-    - "{{ tower_ec2_dynamic_inventory_group_first }}"
-    - "{{ tower_ec2_dynamic_inventory_group_second }}"
+    tower_verify_ssl: false
+  with_items: "{{ tower_ec2_dynamic_inventory_group }}"
+
+- name: create groups with AWS tag to deploy applications
+  tower_group:
+    name: "{{ tower_ec2_dynamic_tag }}-{{ item }}"
+    inventory: "{{ tower_ec2_dynamic_inventory }}"
+    tower_verify_ssl: false
+  with_items: "{{ tower_ec2_dynamic_inventory_group }}"
 
 - name: associate AWS tags as children to {{ item }} group
   command: |
-    tower-cli group associate --group {{ item }} --parent bastions \
-    --inventory "{{ tower_ec2_dynamic_inventory }}"
-  loop: "{{ tower_ec2_dynamic_inventory_group_second }}"
+    tower-cli group associate --group "{{ tower_ec2_dynamic_tag }}-{{ item }}" \
+    --parent "{{ item }}" --inventory "{{ tower_ec2_dynamic_inventory }}"
+  with_items: "{{ tower_ec2_dynamic_inventory_group }}"
 
 - name: copy inventory vars
   copy:
@@ -29,6 +36,7 @@
     name: localhost
     inventory: "{{ tower_ec2_dynamic_inventory }}"
     variables: "@{{ tower_tmp_dir }}/inventory_vars.json"
+    tower_verify_ssl: false
 
 - name: create inventory source with ec2 script
   tower_inventory_source:
@@ -40,3 +48,4 @@
     instance_filters: "{{ tower_tag_filters }}"
     overwrite: true
     update_on_launch: true
+    tower_verify_ssl: false
