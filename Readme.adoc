@@ -80,6 +80,8 @@ ansible-playbook setup-tower.yml \
 ----
 
 
+== Manual deployment
+
 === Provisioning QE Environment
 
 * Connect to the workstation host for _Ansible Advanced - Homework_.
