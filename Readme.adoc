@@ -22,15 +22,21 @@ scp ~/.ssh/<OPENTLC_KEY> ${OPENTLC_USERNAME}@bastion.${HOMEWORK_GUID}.example.op
 
 NOTE: Specify `~/.ssh/<OPENTLC_KEY>` with your OpenTLC ssh key file.
 
-* Set up the workstation host for _Ansible Advanced - OpenStack_.
+* Set up credentials and variables for the playbook.
 
 [source,text]
 ----
 sudo -i
 mv /tmp/mykey.pem ~/.ssh/
 echo "OSP_GUID=<OpenStack GUID from mail>" >> ~/.bashrc
-. ~/.bashrc
+source ~/.bashrc
 OPENTLC_USERNAME=<Your OpenTLC user name>
+----
+
+* Set up the workstation host for _Ansible Advanced - OpenStack_.
+
+[source,text]
+----
 git clone https://github.com/hashnao/ansible_advance_homework.git
 cd ansible_advance_homework/
 sed -i "s/OSP_GUID/${OSP_GUID}/" ssh.cfg
@@ -50,6 +56,21 @@ Vault password:
 
 
 == Configuring Ansible Tower
+
+* Create a credential file for OpenTLC.
+
+[source,text]
+----
+ansible-vault create /tmp/opentlc.yml
+----
+
+NOTE: Enter your OpenTLC ID and password as the prompt appears.
+
+----
+opentlc_username: <OpenTLC user name>
+opentlc_password: <OpenTLC password>
+----
+
 
 * Remove unnecessary line in the key file.
 
