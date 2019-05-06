@@ -14,5 +14,5 @@
 - name: create workflow using schema
   tower_workflow_template:
     name: "{{ tower_workflow_template }}"
-    schema: "{{ lookup(file, {{ tower_tmp_dir }}/workflow.yml ) }}"
+    schema: "{{ lookup('file', '{{ tower_tmp_dir }}/workflow.yml') }}"
     tower_verify_ssl: false
