@@ -14,16 +14,15 @@
 - name: associate instance group to job template for provisioning QA environment
   shell: |
     tower-cli job_template associate_ig \
-    --job_template "{{ tower_job_template_provision_qa }}"
-    --instance_group "{{ tower_instance_group_name }}"
+    --job-template "{{ tower_job_template_provision_qa }}" \
+    --instance-group "{{ tower_instance_group_name }}"
 
 - name: create vault credential
-  tower_credential_type:
-    name: yum-repo-cred
-    organization: "{{ tower_organization }}"
-    inputs: "{'vault_password': 'ansible'}"
-    type: vault
-    tower_verify_ssl: false
+  command: |
+    tower-cli credential create --organization "{{ tower_organization }}" \
+    --name "{{ tower_vault_credential }}" \
+    --inputs='{"vault_password":"ansible"}' \
+    --credential-type="Vault"
 
 - name: create job template for 3-tier application on QA environment
   tower_job_template:
@@ -33,15 +32,15 @@
     project: "{{ tower_project_name }}"
     playbook: "{{ tower_playbook_3tier_app }}"
     credential: "{{ tower_ssh_cred_name }}"
-    vault_credential: yum-repo-cred
+    vault_credential: "{{ tower_vault_credential }}"
     tower_verify_ssl: false
 
 # TBC: check if it can be replaced with related module.
-- name: associate instance group to 3-tier application job template for QA environment
+- name: associate instance group to job template for 3 tier application on QA environment
   shell: |
     tower-cli job_template associate_ig \
-    --job_template "{{ tower_job_template_3tier_app }}" \
-    --instance_group "{{ tower_instance_group_name }}"
+    --job-template "{{ tower_job_template_3tier_app }}" \
+    --instance-group "{{ tower_instance_group_name }}"
 
 - name: create job template for deleting QA environment
   tower_job_template:
@@ -49,18 +48,18 @@
     job_type: run
     inventory: "{{ tower_static_inventory_name }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_qa_delete }}"
+    playbook: "{{ tower_playbook_delete_qa }}"
     credential: "{{ tower_ssh_cred_name }}"
     tower_verify_ssl: false
 
 # TBC: check if it can be replaced with related module.
-- name: associate instance group to OSP Delete instances job template
+- name: associate instance group to job template for deleting QA environment
   shell: |
     tower-cli job_template associate_ig \
-    --job_template "{{ tower_playbook_delete_qa }}" \
-    --instance_group "{{ tower_instance_group_name }}"
+    --job-template "{{ tower_job_template_delete_qa }}" \
+    --instance-group "{{ tower_instance_group_name }}"
 
-- name: create job template for smoke test osp instances
+- name: create job template for smoke test on QA environment
   tower_job_template:
     name: "{{ tower_job_template_smoke_qa }}"
     job_type: run
@@ -71,11 +70,11 @@
     tower_verify_ssl: false
 
 # TBC: check if it can be replaced with related module.
-- name: associate instance group to Smoke test job template
+- name: associate instance group to job template for smoke test on QA environment
   shell: |
     tower-cli job_template associate_ig \
-    --job_template "{{ tower_job_template_smoke_qa }}" \
-    --instance_group "{{ tower_instance_group_name }}"
+    --job-template "{{ tower_job_template_smoke_qa }}" \
+    --instance-group "{{ tower_instance_group_name }}"
 
 - name: generate var file for order_svc.sh script
   template:
@@ -125,9 +124,9 @@
     job_type: run
     inventory: "{{ tower_ec2_dynamic_inventory }}"
     project: "{{ tower_project_name }}"
-    playbook: "{{ tower_playbook_app_deploy }}"
-    credential: "{{ tower_playbook_3tier_app_prod }}"
-    vault_credential: yum-repo-cred
+    playbook: "{{ tower_playbook_3tier_app_prod }}"
+    credential: "{{ tower_ssh_cred_name }}"
+    vault_credential: "{{ tower_vault_credential }}"
     tower_verify_ssl: false
 
 - name: create job template for smoke test on production environment
@@ -138,5 +137,5 @@
     project: "{{ tower_project_name }}"
     playbook: "{{ tower_playbook_smoke_prod }}"
     credential: "{{ tower_ssh_cred_name }}"
-    vault_credential: yum-repo-cred
+    vault_credential: "{{ tower_vault_credential }}"
     tower_verify_ssl: false

@@ -4,6 +4,9 @@
   tower_project:
     name: "{{ tower_project_name }}"
     organization: "{{ tower_organization }}"
+    scm_type: "{{ tower_scm_type }}"
+    scm_url: "{{ tower_scm_url }}"
+    scm_branch: "{{ tower_scm_branch }}"
     state: present
     tower_verify_ssl: false
 
