@@ -6,6 +6,7 @@ tower_static_inventory_variable: static_inventory_variable.yml
 tower_ec2_dynamic_inventory: "AWS inventory source"
 tower_ec2_inventory_source: "Three tier inventory source"
 tower_ec2_dynamic_inventory_variable: ec2_dynamic_inventory_variable.yml
+tower_ec2_dynamic_inventory_variable_group: ec2_dynamic_inventory_variable_group.yml
 scm_inventory_source: "SCM three tier inventory source"
 tower_tmp_dir: /tmp
 

@@ -10,6 +10,7 @@
   tower_group:
     name: "{{ item }}"
     inventory: "{{ tower_ec2_dynamic_inventory }}"
+    variables: "@{{ tower_tmp_dir }}/{{ tower_ec2_dynamic_inventory_variable }}"
     tower_verify_ssl: false
   with_items: "{{ tower_ec2_dynamic_inventory_group }}"
 
@@ -35,7 +36,6 @@
   tower_host:
     name: localhost
     inventory: "{{ tower_ec2_dynamic_inventory }}"
-    variables: "@{{ tower_tmp_dir }}/{{ tower_ec2_dynamic_inventory_variable }}"
     tower_verify_ssl: false
 
 - name: create inventory source with ec2 script
