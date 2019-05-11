@@ -32,8 +32,13 @@
   tower_inventory:
     name: "{{ tower_static_inventory_name }}"
     organization: "{{ tower_organization }}"
-    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
+#    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
     tower_verify_ssl: false
+
+- name: create static inventory group variables file
+  template:
+    src: "{{ tower_static_inventory_variable_group }}.j2"
+    dest: "{{ tower_tmp_dir }}/{{ tower_static_inventory_variable_group }}"
 
 - name: create group in static inventory
   tower_group:
