@@ -32,13 +32,14 @@
   tower_inventory:
     name: "{{ tower_static_inventory_name }}"
     organization: "{{ tower_organization }}"
-#    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
+    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
     tower_verify_ssl: false
 
 - name: create group in static inventory
   tower_group:
     name: "{{ tower_group_name }}"
     inventory: "{{ tower_static_inventory_name }}"
+    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable_group }}"
     tower_verify_ssl: false
 
 # TBD: Associate ssh variables
