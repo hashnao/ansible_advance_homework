@@ -103,6 +103,12 @@ ansible-playbook setup-tower.yml \
 
 == Running a workflow template on Ansible Tower
 
+* Log in to the Ansible Tower Console
+
+* Click [Templates] and click job launching button to start _cicd_ workflow template.
+
+* Verify all the templates succeed.
+
 
 == Manual deployment
 
