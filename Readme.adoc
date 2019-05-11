@@ -8,7 +8,7 @@ First deploy the following environments through the OpenTLC lab.
 * _Ansible Advanced - OpenStack_
 
 NOTE: The OpenTLC lab has limits that only 3 labs can be deployed.
-This homework deploys 3 labs finally, so remove all the labs if you already have any.
+This homework deploys 3 labs finally, so remove all the labs in advance if you've already had any.
 
 * Connect to the workstation host for _Ansible Advanced - Homework_.
 
@@ -40,7 +40,7 @@ OPENTLC_USERNAME=<Your OpenTLC user name>
 git clone https://github.com/hashnao/ansible_advance_homework.git
 cd ansible_advance_homework/
 sed -i "s/OSP_GUID/${OSP_GUID}/" ssh.cfg
-ansible-playbook qe-setup-workstation.yml \
+ansible-playbook qa-setup-workstation.yml \
 -e OSP_GUID=${OSP_GUID} \
 --ask-vault-pass \
 --private-key=/root/.ssh/mykey.pem \
@@ -101,9 +101,14 @@ ansible-playbook setup-tower.yml \
 ----
 
 
+== Running a workflow template on Ansible Tower
+
+
 == Manual deployment
 
-=== Provisioning QE Environment
+This section describes about manually running the playbooks for debugging, verifying, or other purposes.
+
+=== Provisioning QA Environment
 
 * Connect to the workstation host for _Ansible Advanced - Homework_.
 
@@ -129,7 +134,7 @@ OPENTLC_USERNAME=<Your OpenTLC user name>
 git clone https://github.com/hashnao/ansible_advance_homework.git
 cd ansible_advance_homework/
 sed -i "s/OSP_GUID/${OSP_GUID}/" ssh.cfg
-ansible-playbook qe-setup-workstation.yml \
+ansible-playbook qa-setup-workstation.yml \
 -e OSP_GUID=${OSP_GUID} \
 --ask-vault-pass \
 --private-key=/root/.ssh/mykey.pem \
@@ -143,33 +148,33 @@ NOTE: Enter the vault password that encrypts `keystone_password`.
 Vault password:
 ----
 
-* Provision instances for QE environment on _Ansible Advanced - OpenStack_.
+* Provision instances for QA Environment on _Ansible Advanced - OpenStack_.
 
 [source,text]
 ----
-ansible-playbook qe-setup-instances.yml -e OSP_GUID=${OSP_GUID}
+ansible-playbook qa-setup-instances.yml -e OSP_GUID=${OSP_GUID}
 ----
 
 * Install the 3-tier applications.
 
 [source,text]
 ----
-ansible-playbook setup-3tier-app.yml
+ansible-playbook qa-3tier-setup.yml
 ----
 
 * run a smoke test on the QA environment for the three-tier application
 
 [source,text]
 ----
-ansible-playbook qe-smoke-test.yml
+ansible-playbook qa-smoke-test.yml
 ----
 
-NOTE: If the smoke test fails and you need to re-create the QE environment,
+NOTE: If the smoke test fails and you need to re-create the QA Environment,
 you can delete the instances by running the folloing playbook.
 
 [source,text]
 ----
-ansible-playbook qe-clean-instances.yml -e OSP_GUID=${OSP_GUID}
+ansible-playbook qa-clean-instances.yml -e OSP_GUID=${OSP_GUID}
 ----
 
 
@@ -202,14 +207,15 @@ ansible-playbook prod-setup-instances.yml \
 .Playbooks
 [%header,cols=2*]
 |===
-| Files or dir | Purpose
-| `qe-setup-workstation.yml` | configures workstation for OpenStack, creates prerequisite resources, and installs isolated node for Ansible Tower.
-| `qe-setup-instances.yml` | creates instances for QE environment.
-| `qe-clean-instances.yml` | removes instances for QE environment.
-| `qe-smoke-test.yml` | runs smoke test for QE environment.
-| `setup-3tier-app.yml` | installs the 3-tier application.
-| `clean-3tier-app.yml` | removes the 3-tier application.
+| Files | Description
+| `qa-setup-workstation.yml` | configures workstation for OpenStack, creates prerequisite resources, and installs isolated node for Ansible Tower.
+| `qa-setup-instances.yml` | creates instances for QA Environment.
+| `qa-clean-instances.yml` | removes instances for QA Environment.
+| `qa-smoke-test.yml` | runs smoke test for QA Environment.
+| `qa-3tier-setup.yml` | installs the 3-tier application for QA environment.
+| `clean-3tier-app.yml` | removes the 3-tier application for QA environment.
 | `prod-setup-instances.yml` | creates instances for production environment.
+| `prod-3tier-setup.yml` | installs the 3-tier application for production environment.
 | `prod-smoke-test.yml` | runs smoke test for production environment.
 | `setup-tower.yml` | creates Ansible Tower job templates and workflows.
 | `prod-setup-credentials.yml` | fetches key.pem from bastion and creates machine credential to connect to instances.
@@ -219,6 +225,7 @@ ansible-playbook prod-setup-instances.yml \
 .Roles
 [%header,cols=2*]
 |===
+| File or directory | Description
 | `roles/base` | configures yum repository and installs base packages.
 | `roles/tomcat` | installs Tomcat.
 | `roles/postgresql` | installs PostgreSQL.

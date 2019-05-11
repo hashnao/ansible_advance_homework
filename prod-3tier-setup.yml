@@ -1,0 +1,22 @@
+---
+
+- name: setup database server
+  hosts: tag_AnsibleGroup_appdbs
+  gather_facts: false
+  become: true
+  roles:
+    - { role: postgresql }
+
+- name: setup applicaton server
+  hosts: tag_AnsibleGroup_apps
+  gather_facts: false
+  become: true
+  roles:
+    - { role: tomcat }
+
+- name: setup load-balancer
+  hosts: tag_AnsibleGroup_frontends
+  gather_facts: true
+  become: true
+  roles:
+    - { role: haproxy }

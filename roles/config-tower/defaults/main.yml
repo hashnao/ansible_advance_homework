@@ -2,8 +2,10 @@
 # vars file for roles/config-tower
 
 tower_static_inventory_name: scm_inventory
+tower_static_inventory_variable: static_inventory_variable.yml
 tower_ec2_dynamic_inventory: "AWS inventory source"
 tower_ec2_inventory_source: "Three tier inventory source"
+tower_ec2_dynamic_inventory_variable: ec2_dynamic_inventory_variable.yml
 scm_inventory_source: "SCM three tier inventory source"
 tower_tmp_dir: /tmp
 
@@ -15,16 +17,16 @@ tower_job_template_smoke_qa: "QA environment - smoke test"
 tower_playbook_smoke_qa: qa-smoke-test.yml
 tower_job_template_provision_prod: "Production environment - provisioning"
 tower_playbook_provision_prod: prod-setup-instances.yml
-tower_job_template_ssh_prod: "Production environment - configuring ssh keys"
+tower_job_template_ssh_prod: "Production environment - configuring ssh keys, provisioning 3-tier application, running smoke test"
 tower_playbook_ssh_prod: prod-setup-credentials.yml
 tower_job_template_3tier_app: "QA environment - 3-tier application deployment"
-tower_playbook_3tier_app: setup-3tier-app.yml
+tower_playbook_3tier_app: qa-3tier-setup.yml
 tower_job_template_smoke_prod: "Production environment - smoke test"
 tower_playbook_smoke_prod: prod-smoke-test.yml
 tower_job_template_status_prod: "Production environment - ec2 instances status check"
 tower_playbook_status_prod: prod-check-ssh.yml
 tower_job_template_3tier_app_prod: "Production environment - 3-tier application deployment"
-tower_playbook_3tier_app_prod: "{{ tower_playbook_3tier_app }}"
+tower_playbook_3tier_app_prod: prod-3tier-setup.yml
 
 tower_project_name: "Homework Assignment"
 tower_organization: Default
@@ -38,6 +40,7 @@ tower_password: !vault |
           3965
 tower_ssh_cred_name: "Connect_to_workstation"
 tower_ssh_username: cloud-user
+tower_ssh_ec2_username: ec2-user
 tower_ssh_secretkey_path: /root/.ssh/openstack.pem
 tower_opentlc_secretkey_path: /root/.ssh/mykey.pem
 tower_aws_read_keys: "AWS Access Key"

@@ -23,10 +23,16 @@
     state: present
     tower_verify_ssl: false
 
+- name: create static inventory variables file
+  template:
+    src: "{{ tower_static_inventory_variable }}.j2"
+    dest: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
+
 - name: create static inventory
   tower_inventory:
     name: "{{ tower_static_inventory_name }}"
     organization: "{{ tower_organization }}"
+    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
     tower_verify_ssl: false
 
 - name: create group in static inventory
@@ -35,6 +41,7 @@
     inventory: "{{ tower_static_inventory_name }}"
     tower_verify_ssl: false
 
+# TBD: Associate ssh variables
 - name: add workstation host in tower_inventory
   tower_host:
     name: "{{ tower_host_name }}"
