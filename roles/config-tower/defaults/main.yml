@@ -50,6 +50,7 @@ tower_tag_filters: "tag:instance_filter=three-tier-app-{{ EMAIL }}"
 tower_opentlc_cred_name: "Opentlc key"
 tower_vault_credential: yum-repo-cred
 vault_name: yum_repo_vault
+tower_playbook_vault_name: playbook-vault
 tower_group_name: workstation
 tower_host_name: workstation-{{ OSP_GUID }}.rhpds.opentlc.com
 tower_ec2_dynamic_inventory_group:

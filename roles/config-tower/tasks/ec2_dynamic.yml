@@ -29,7 +29,7 @@
 - name: create dynamic inventory variables file
   template:
     src: "{{ tower_ec2_dynamic_inventory_variable }}.j2"
-    dest: "@{{ tower_tmp_dir }}/{{ tower_ec2_dynamic_inventory_variable }}"
+    dest: "{{ tower_tmp_dir }}/{{ tower_ec2_dynamic_inventory_variable }}"
 
 - name: add localhost as host
   tower_host:

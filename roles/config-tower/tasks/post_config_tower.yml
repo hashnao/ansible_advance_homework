@@ -26,13 +26,13 @@
 - name: create static inventory variables file
   template:
     src: "{{ tower_static_inventory_variable }}.j2"
-    dest: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
+    dest: "{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
 
 - name: create static inventory
   tower_inventory:
     name: "{{ tower_static_inventory_name }}"
     organization: "{{ tower_organization }}"
-    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
+#    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
     tower_verify_ssl: false
 
 - name: create group in static inventory
@@ -78,3 +78,15 @@
   file:
     name: "{{ tower_tmp_dir }}/secret.pem"
     state: absent
+
+- name: create vault credential
+  tower_credential:
+    name: "{{ tower_playbook_vault_name }}"
+    organization: "{{ tower_organization }}"
+    kind: vault
+    vault_password: "{{ tower_password }}"
+    tower_host: "tower1.{{ TOWER_GUID }}.example.opentlc.com"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    state: present
+    tower_verify_ssl: false
