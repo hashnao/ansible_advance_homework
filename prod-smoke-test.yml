@@ -1,20 +1,19 @@
 ---
 
-- hosts: frontends
+- hosts: tag_AnsibleGroup_frontends
   gather_facts: false
   vars_files:
     - roles/osp-setup/defaults/main.yml
     - roles/haproxy/defaults/main.yml
-  post_tasks:
+  tasks:
     - name: check http response
       uri:
-        url: "http://{{ item.public_v4 }}/"
+        url: "http://frontend1.{{ ANSIBLE_ADVANCE_GUID }}.example.opentlc.com"
         return_content: true
       register: webpage
       until: haproxy_expected_response in webpage.content
       retries: 3
       delay: 3
-      with_items: "{{ frontend_instance.ansible_facts.openstack_servers }}"
 
     - name: fail if expected result is not in the page content
       fail:

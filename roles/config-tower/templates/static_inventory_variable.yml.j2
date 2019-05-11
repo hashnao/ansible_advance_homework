@@ -1,0 +1,3 @@
+ansible_user: "{{ tower_ssh_username }}"
+ansible_connection: ssh
+ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -o ProxyCommand="ssh -W %h:%p -q {{ tower_ssh_username }}@workstation-{{ OSP_GUID }}.rhpds.opentlc.com"'

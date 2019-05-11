@@ -26,16 +26,16 @@
     --parent "{{ item }}" --inventory "{{ tower_ec2_dynamic_inventory }}"
   with_items: "{{ tower_ec2_dynamic_inventory_group }}"
 
-- name: copy inventory vars
-  copy:
-    src: inventory_vars.json
-    dest: "{{ tower_tmp_dir }}/inventory_vars.json"
+- name: create dynamic inventory variables file
+  template:
+    src: "{{ tower_ec2_dynamic_inventory_variable }}.j2"
+    dest: "@{{ tower_tmp_dir }}/{{ tower_ec2_dynamic_inventory_variable }}"
 
 - name: add localhost as host
   tower_host:
     name: localhost
     inventory: "{{ tower_ec2_dynamic_inventory }}"
-    variables: "@{{ tower_tmp_dir }}/inventory_vars.json"
+    variables: "@{{ tower_tmp_dir }}/{{ tower_ec2_dynamic_inventory_variable }}"
     tower_verify_ssl: false
 
 - name: create inventory source with ec2 script
