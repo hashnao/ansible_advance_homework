@@ -105,6 +105,7 @@
     project: "{{ tower_project_name }}"
     playbook: "{{ tower_playbook_ssh_prod }}"
     credential: "{{ tower_opentlc_cred_name }}"
+    vault_credential: "{{ tower_playbook_vault_name }}"
     extra_vars_path: /tmp/tower_info.yml
     tower_verify_ssl: false
 
