@@ -2,7 +2,6 @@
 # vars file for roles/config-tower
 
 tower_static_inventory_name: scm_inventory
-tower_static_inventory_variable: static_inventory_variable.yml
 tower_static_inventory_variable_group: static_inventory_variable_group.yml
 tower_ec2_dynamic_inventory: "AWS inventory source"
 tower_ec2_inventory_source: "Three tier inventory source"
