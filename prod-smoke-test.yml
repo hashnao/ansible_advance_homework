@@ -1,6 +1,7 @@
 ---
 
 - hosts: tag_AnsibleGroup_frontends
+  connection: local
   gather_facts: false
   vars_files:
     - roles/haproxy/defaults/main.yml
@@ -16,4 +17,4 @@
 
     - name: fail if expected result is not in the page content
       fail:
-      when: "haproxy_expected_response not in webpage.results.content"
+      when: "haproxy_expected_response not in webpage.content"
