@@ -46,6 +46,7 @@
   tower_host:
     name: "{{ tower_host_name }}"
     inventory: "{{ tower_static_inventory_name }}"
+    variables: "ansible_ssh_common_args: '-o StrictHostKeyChecking=no'"
     tower_verify_ssl: false
 
 - name: associate workstation host to group
