@@ -3,7 +3,6 @@
 - hosts: tag_AnsibleGroup_frontends
   gather_facts: false
   vars_files:
-    - roles/osp-setup/defaults/main.yml
     - roles/haproxy/defaults/main.yml
   tasks:
     - name: check http response
@@ -17,4 +16,4 @@
 
     - name: fail if expected result is not in the page content
       fail:
-      when: "haproxy_expected_response not in webpage.results[0].content"
+      when: "haproxy_expected_response not in webpage.results.content"
