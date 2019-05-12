@@ -23,16 +23,10 @@
     state: present
     tower_verify_ssl: false
 
-- name: create static inventory variables file
-  template:
-    src: "{{ tower_static_inventory_variable }}.j2"
-    dest: "{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
-
 - name: create static inventory
   tower_inventory:
     name: "{{ tower_static_inventory_name }}"
     organization: "{{ tower_organization }}"
-#    variables: "@{{ tower_tmp_dir }}/{{ tower_static_inventory_variable }}"
     tower_verify_ssl: false
 
 - name: create static inventory group variables file
