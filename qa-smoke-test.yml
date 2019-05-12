@@ -6,7 +6,7 @@
     - roles/osp-setup/defaults/main.yml
     - roles/haproxy/defaults/main.yml
   vars:
-    - instance_name: frontends
+    - instance_name: frontend1
   roles:
     - { role: osp-facts, tags: set_server_fact }
   post_tasks:
