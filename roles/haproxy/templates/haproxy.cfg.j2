@@ -28,3 +28,6 @@ backend app-server-http
 {% for host in groups.apps %}
     server app{{ loop.index }} {{ hostvars[host].ansible_host }}:{{ tomcat_port }} check cookie app{{ loop.index }}
 {% endfor %}
+{% for host in groups.tag_AnsibleGroup_apps %}
+    server app{{ loop.index }} {{ hostvars[host].ansible_host }}:{{ tomcat_port }} check cookie app{{ loop.index }}
+{% endfor %}
