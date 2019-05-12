@@ -8,7 +8,7 @@
   tasks:
     - name: check http response
       uri:
-        url: "http://frontend1.{{ ANSIBLE_ADVANCE_GUID }}.example.opentlc.com"
+        url: "http://{{ inventory_hostname }}"
         return_content: true
       register: webpage
       until: haproxy_expected_response in webpage.content
