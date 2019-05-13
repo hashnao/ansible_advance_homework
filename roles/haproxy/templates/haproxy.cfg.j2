@@ -25,9 +25,13 @@ backend app-server-http
     mode http
     balance roundrobin
     option forwardfor
+{% if groups.apps is defined %}
 {% for host in groups.apps %}
     server app{{ loop.index }} {{ hostvars[host].ansible_host }}:{{ tomcat_port }} check cookie app{{ loop.index }}
 {% endfor %}
+{% endif %}
+{% if groups.tag_AnsibleGroup_apps is defined %}
 {% for host in groups.tag_AnsibleGroup_apps %}
     server app{{ loop.index }} {{ hostvars[host].inventory_hostname }}:{{ tomcat_port }} check cookie app{{ loop.index }}
 {% endfor %}
+{% endif %}
